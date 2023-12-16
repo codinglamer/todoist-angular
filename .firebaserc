@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "todoist-angular": {
+      "hosting": {
+        "todoist-angular": [
+          "todoist-angular"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "todoist-angular"
+  }
+}
