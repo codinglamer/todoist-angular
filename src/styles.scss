@@ -10,3 +10,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+h1 {
+  @apply text-3xl font-bold text-center;
+}
