@@ -12,5 +12,25 @@ body {
 }
 
 h1 {
-  @apply text-3xl font-bold text-center;
+  @apply text-3xl font-bold text-center my-4;
+}
+
+// hot fix for tailwindcss base
+*, ::before, ::after {
+  border-style: none;
+}
+
+.page-wrapper {
+  @apply flex flex-col items-center justify-center space-y-4 py-4;
+}
+
+.form {
+  @apply inline-flex flex-col items-center justify-center space-y-4;
+  & > * {
+    @apply w-full;
+  }
+}
+
+.success {
+  @apply text-green-400;
 }

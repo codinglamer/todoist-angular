@@ -1,1 +1,85 @@
-<h1>Sign up</h1>
+<div class="page-wrapper">
+  <h1>Sign up</h1>
+
+  <form
+    class="form"
+    [formGroup]="signUpForm"
+    (ngSubmit)="createAccount()">
+    <mat-form-field appearance="outline">
+      <mat-label>Display name</mat-label>
+      <input
+        matInput
+        placeholder="John Doe"
+        [formControlName]="'displayName'">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input
+        matInput
+        placeholder="john.doe"
+        [formControlName]="'username'">
+      @if (username.touched && username.dirty && username.value && username.valid) {
+        <mat-hint class="success">Username is available</mat-hint>
+      } @else {
+        <mat-hint>Another way you can log in</mat-hint>
+      }
+      @if (username.invalid) {
+        <mat-error>{{ getUsernameErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        placeholder="john.doe@gmail.com"
+        [formControlName]="'email'"
+        required>
+      @if (email.touched && email.dirty && email.value && email.valid) {
+        <mat-hint class="success">Email is available</mat-hint>
+      }
+      @if (email.invalid) {
+        <mat-error>{{ getEmailErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="!showPassword() ? 'password' : 'text'"
+        [formControlName]="'password'"
+        required>
+      <button type="button" mat-icon-button matSuffix (click)="toggleShowPassword()">
+        <mat-icon>{{ !showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (password.invalid) {
+        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Confirm password</mat-label>
+      <input
+        matInput
+        [type]="!showPassword() ? 'password' : 'text'"
+        [formControlName]="'passwordConfirmation'"
+        required>
+      <button type="button" mat-icon-button matSuffix (click)="toggleShowPassword()">
+        <mat-icon>{{ !showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (passwordConfirmation.invalid) {
+        <mat-error>{{ getPasswordConfirmationErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <p class="font-bold text-red-400 {{ !creatingAccountFailed() ? 'hidden' : '' }}">
+      Something went wrong. Try again later.
+    </p>
+
+    <button mat-flat-button [disabled]="creatingAccount()" color="primary">
+      {{ !creatingAccount() ? 'Create account' : 'Creating account...' }}
+    </button>
+  </form>
+</div>
