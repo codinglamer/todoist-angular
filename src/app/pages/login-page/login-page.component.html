@@ -1,1 +1,42 @@
-<h1>Log in</h1>
+<div class="page-wrapper">
+  <h1>Log in</h1>
+
+  <form
+    class="form"
+    [formGroup]="loginForm"
+    (ngSubmit)="login()">
+    <mat-form-field appearance="outline">
+      <mat-label>Email or username</mat-label>
+      <input
+        matInput
+        [formControlName]="'emailOrUsername'"
+        required>
+      @if (emailOrUsername.invalid) {
+        <mat-error>{{ getEmailOrUsernameErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="!showPassword() ? 'password' : 'text'"
+        [formControlName]="'password'"
+        required>
+      <button type="button" mat-icon-button matSuffix (click)="toggleShowPassword()">
+        <mat-icon>{{ !showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (password.invalid) {
+        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <p class="font-bold text-red-400 {{ !loginFailed() ? 'hidden' : '' }}">
+      Invalid email/username or password
+    </p>
+
+    <button mat-flat-button [disabled]="tryingToLogin()" color="primary">
+      {{ !tryingToLogin() ? 'Log in' : 'Trying to log in...' }}
+    </button>
+  </form>
+</div>
