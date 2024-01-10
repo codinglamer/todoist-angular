@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { RoutePaths } from '../../app.routes';
 import { ILoginForm } from '../../forms/ILoginForm';
 import { UserService } from '../../services/user.service';
 
@@ -80,7 +81,7 @@ export class LoginPageComponent {
       this.tryingToLogin.set(true);
       this.loginFailed.set(false);
       await this.userService.login(isEmail, this.emailOrUsername.value, this.password.value);
-      await this.router.navigateByUrl('');
+      await this.router.navigateByUrl(RoutePaths.Main);
     } catch (e) {
       this.tryingToLogin.set(false);
       this.loginFailed.set(true);

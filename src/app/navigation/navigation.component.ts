@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { RoutePaths } from '../app.routes';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -16,10 +17,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  public readonly RoutePaths = RoutePaths;
+
   ngOnInit(): void {
     this.userService.authedUser$.subscribe(async (user) => {
       if (!user) {
-        await this.router.navigateByUrl('login');
+        await this.router.navigateByUrl(RoutePaths.Login);
       }
     });
   }

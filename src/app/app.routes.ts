@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
-import { notAuthGuard } from './guards/notAuthGuard';
+import { noAuthGuard } from './guards/no-auth.guard';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import {
   NeedVerificationPageComponent
@@ -10,31 +10,38 @@ import { TaskListPageComponent } from './pages/task-list-page/task-list-page.com
 
 const appTitle = 'Todoist';
 
+export enum RoutePaths {
+  Main = '',
+  Login = 'login',
+  SignUp = 'signup',
+  NeedVerification = 'need-verification'
+}
+
 export const routes: Routes = [
   {
-    path: '',
+    path: RoutePaths.Main,
     title: appTitle,
     component: TaskListPageComponent,
     canActivate: [authGuard],
     pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: RoutePaths.Login,
     title: `${appTitle} | Log in`,
     component: LoginPageComponent,
-    canActivate: [notAuthGuard]
+    canActivate: [noAuthGuard]
   },
   {
-    path: 'signup',
+    path: RoutePaths.SignUp,
     title: `${appTitle} | Sign up`,
     component: SignUpPageComponent,
-    canActivate: [notAuthGuard]
+    canActivate: [noAuthGuard]
   },
   {
-    path: 'need-verification',
+    path: RoutePaths.NeedVerification,
     title: `${appTitle} | Need verification`,
     component: NeedVerificationPageComponent,
-    canActivate: [notAuthGuard]
+    canActivate: [noAuthGuard]
   },
   {path: '**', redirectTo: ''}
 ];

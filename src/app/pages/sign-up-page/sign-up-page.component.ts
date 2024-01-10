@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { RoutePaths } from '../../app.routes';
 import { ISignUpForm } from '../../forms/ISignUpForm';
 import { UserService } from '../../services/user.service';
 import { SignUpFormValidator } from '../../validators/SignUpFormValidator';
@@ -152,7 +153,7 @@ export class SignUpPageComponent {
         this.creatingAccount.set(true);
         this.creatingAccountFailed.set(false);
         await this.userService.register(user);
-        await this.router.navigateByUrl('need-verification');
+        await this.router.navigateByUrl(RoutePaths.NeedVerification);
       } catch (e) {
         this.creatingAccount.set(false);
         this.creatingAccountFailed.set(true);
