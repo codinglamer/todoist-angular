@@ -40,7 +40,7 @@ export class SignUpPageComponent {
         SignUpFormValidator.usernameStartsWithLetter,
         Validators.minLength(5),
         Validators.maxLength(32),
-        Validators.pattern(/^[a-zA-Z][a-zA-Z0-9]*(.[a-zA-Z0-9]+)*$/)
+        Validators.pattern(/^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)*$/)
       ], this.signUpFormValidator.usernameAvailable
     ),
     email: new FormControl(null, [
