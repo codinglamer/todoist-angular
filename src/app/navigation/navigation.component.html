@@ -1,0 +1,17 @@
+<header class="py-2 px-4 flex justify-between items-center">
+  <span class="text-xl font-bold">Todoist</span>
+  @if (userService.authedUser$ | async; as user) {
+    <div class="nav">
+      <span class="font-bold">{{ user.displayName ?? user.username ?? user.email }}</span>
+      <button class="py-1 px-2 rounded-lg hover:bg-gray-200"
+              (click)="userService.logout()">
+        Log out
+      </button>
+    </div>
+  } @else {
+    <nav class="nav">
+      <a class="nav-link" routerLink="/login">Log in</a>
+      <a class="nav-link" routerLink="/signup">Sign up</a>
+    </nav>
+  }
+</header>
