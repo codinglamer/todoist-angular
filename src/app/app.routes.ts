@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    title: `${appTitle} | Login`,
+    title: `${appTitle} | Log in`,
     component: LoginPageComponent,
     canActivate: [notAuthGuard]
   },
