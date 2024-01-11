@@ -146,18 +146,21 @@ export class SignUpPageComponent {
   }
 
   async createAccount() {
-    if (!this.signUpForm.errors) {
-      const {passwordConfirmation, ...user} = this.signUpForm.value;
+    if (this.signUpForm.invalid) {
+      return;
+    }
 
-      try {
-        this.creatingAccount.set(true);
-        this.creatingAccountFailed.set(false);
-        await this.userService.register(user);
-        await this.router.navigateByUrl(RoutePaths.NeedVerification);
-      } catch (e) {
-        this.creatingAccount.set(false);
-        this.creatingAccountFailed.set(true);
-      }
+    const {passwordConfirmation, ...user} = this.signUpForm.value;
+
+    try {
+      this.creatingAccount.set(true);
+      this.creatingAccountFailed.set(false);
+
+      await this.userService.register(user);
+      await this.router.navigateByUrl(RoutePaths.NeedVerification);
+    } catch (e) {
+      this.creatingAccount.set(false);
+      this.creatingAccountFailed.set(true);
     }
   }
 }

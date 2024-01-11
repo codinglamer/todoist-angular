@@ -71,7 +71,7 @@ export class LoginPageComponent {
   }
 
   async login() {
-    if (this.loginForm.errors) {
+    if (this.loginForm.invalid) {
       return;
     }
 
@@ -80,6 +80,7 @@ export class LoginPageComponent {
     try {
       this.tryingToLogin.set(true);
       this.loginFailed.set(false);
+
       await this.userService.login(isEmail, this.emailOrUsername.value, this.password.value);
       await this.router.navigateByUrl(RoutePaths.Main);
     } catch (e) {
