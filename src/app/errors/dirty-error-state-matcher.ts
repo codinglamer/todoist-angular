@@ -1,7 +1,11 @@
+import { Injectable } from '@angular/core';
 import { AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
-export class CustomErrorStateMatcher implements ErrorStateMatcher {
+@Injectable({
+  providedIn: 'root'
+})
+export class DirtyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: AbstractControl<any, any> | null,
     form: FormGroupDirective | NgForm | null): boolean {

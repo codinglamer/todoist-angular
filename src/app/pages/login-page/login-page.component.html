@@ -11,9 +11,7 @@
         matInput
         [formControlName]="'emailOrUsername'"
         required>
-      @if (emailOrUsername.invalid) {
-        <mat-error>{{ getEmailOrUsernameErrorMessage() }}</mat-error>
-      }
+      <mat-error [appErrorForControl]="emailOrUsername"></mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -26,9 +24,7 @@
       <button type="button" mat-icon-button matSuffix (click)="toggleShowPassword()">
         <mat-icon>{{ !showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
-      @if (password.invalid) {
-        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
-      }
+      <mat-error [appErrorForControl]="password"></mat-error>
     </mat-form-field>
 
     <p class="font-bold text-red-400 {{ !loginFailed() ? 'hidden' : '' }}">

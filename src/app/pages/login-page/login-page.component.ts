@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { RoutePaths } from '../../app.routes';
+import { ErrorForControlDirective } from '../../directives/error-for-control.directive';
 import { ILoginForm } from '../../forms/ILoginForm';
 import { UserService } from '../../services/user.service';
 
@@ -16,7 +17,8 @@ import { UserService } from '../../services/user.service';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ErrorForControlDirective
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss'
@@ -36,8 +38,7 @@ export class LoginPageComponent {
     password: new FormControl(null, Validators.required)
   });
 
-  // region getters
-  // #region getters
+  //#region getters
 
   get emailOrUsername() {
     return this.loginForm.controls.emailOrUsername;
@@ -47,31 +48,17 @@ export class LoginPageComponent {
     return this.loginForm.controls.password;
   }
 
-  // #endregion
-  // endregion
-
-  getEmailOrUsernameErrorMessage(): string | undefined {
-    if (this.emailOrUsername.hasError('required')) {
-      return 'Field is required';
-    }
-
-    return undefined;
-  }
-
-  getPasswordErrorMessage(): string | undefined {
-    if (this.password.hasError('required')) {
-      return 'Field is required';
-    }
-
-    return undefined;
-  }
+  //#endregion
 
   toggleShowPassword() {
     this.showPassword.update(show => !show);
   }
 
   async login() {
-    if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouchedAndDirty();
+    this.loginForm.updateAllValuesAndValidity();
+
+    if (!this.loginForm.valid) {
       return;
     }
 

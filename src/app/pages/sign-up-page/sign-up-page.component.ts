@@ -5,10 +5,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import XRegExp from 'xregexp';
 import { RoutePaths } from '../../app.routes';
+import { ErrorForControlDirective } from '../../directives/error-for-control.directive';
+import { HintForControlDirective } from '../../directives/hint-for-control.directive';
+import { DirtyErrorStateMatcher } from '../../errors/dirty-error-state-matcher';
+import { ErrorMessageGetter } from '../../errors/form-error.utils';
 import { ISignUpForm } from '../../forms/ISignUpForm';
 import { UserService } from '../../services/user.service';
 import { SignUpFormValidator } from '../../validators/SignUpFormValidator';
+import '../../extensions/FormGroupExts';
 
 @Component({
   standalone: true,
@@ -18,13 +24,16 @@ import { SignUpFormValidator } from '../../validators/SignUpFormValidator';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ErrorForControlDirective,
+    HintForControlDirective
   ],
   templateUrl: './sign-up-page.component.html',
   styleUrl: './sign-up-page.component.scss'
 })
 export class SignUpPageComponent {
   constructor(
+    public dirtyErrorStateMatcher: DirtyErrorStateMatcher,
     private signUpFormValidator: SignUpFormValidator,
     private userService: UserService,
     private router: Router
@@ -35,7 +44,12 @@ export class SignUpPageComponent {
   creatingAccountFailed = signal(false);
 
   signUpForm: FormGroup = new FormGroup<ISignUpForm>({
-    displayName: new FormControl(null),
+    displayName: new FormControl(null, [
+      Validators.minLength(2),
+      Validators.maxLength(32),
+      Validators.pattern(XRegExp.tag()`^[\p{L}- ]+$`),
+      // Validators.pattern(/^[^\W0-9_]+$/)
+    ]),
     username: new FormControl(null, [
         SignUpFormValidator.usernameStartsWithLetter,
         Validators.minLength(5),
@@ -58,8 +72,7 @@ export class SignUpPageComponent {
     ])
   });
 
-  // region getters
-  // #region getters
+  //#region getters
 
   get displayName() {
     return this.signUpForm.controls.displayName;
@@ -81,74 +94,34 @@ export class SignUpPageComponent {
     return this.signUpForm.controls.passwordConfirmation;
   }
 
-  // #endregion
-  // endregion
+  //#endregion
 
-  getUsernameErrorMessage(): string | undefined {
-    if (this.username.hasError('startsWithLetter')) {
-      return 'The field must start with a letter';
-    }
-    if (this.username.hasError('pattern')) {
-      return 'Can contain letters, digits and single dots as delimiter';
-    }
-    if (this.username.hasError('minlength')) {
-      return 'Minimal length is 5';
-    }
-    if (this.username.hasError('maxlength')) {
-      return 'Maximal length is 32';
-    }
-    if (this.username.hasError('notAvailable')) {
-      return `${this.username.errors?.notAvailable} is not available`;
-    }
-
-    return undefined;
-  }
-
-  getEmailErrorMessage(): string | undefined {
-    if (this.email.hasError('required')) {
-      return 'Field is required';
-    }
-    if (this.email.hasError('email')) {
-      return 'Not a valid email';
-    }
-    if (this.email.hasError('notAvailable')) {
-      return `${this.email.errors?.notAvailable} is not available`;
-    }
-
-    return undefined;
-  }
-
-  getPasswordErrorMessage(): string | undefined {
-    if (this.password.hasError('required')) {
-      return 'Field is required';
-    }
-    if (this.password.hasError('minlength')) {
-      return `Minimal length is ${this.password.errors?.minlength.requiredLength}`;
-    }
-    if (this.password.hasError('maxlength')) {
-      return `Maximal length is ${this.password.errors?.maxlength.requiredLength}`;
-    }
-
-    return undefined;
-  }
-
-  getPasswordConfirmationErrorMessage(): string {
-    if (this.passwordConfirmation.hasError('required')) {
-      return 'Field is required';
-    }
-
-    return this.passwordConfirmation.hasError('different')
-      ? 'Passwords are different' : '';
-  }
+  usernameErrorMessages: [string, ErrorMessageGetter][] = [
+    ['pattern', () => 'Can contain letters, digits and single dots as delimiter']
+  ];
 
   toggleShowPassword() {
     this.showPassword.update(show => !show);
   }
 
   async createAccount() {
-    if (this.signUpForm.invalid) {
+    // this.signUpForm.markAllAsTouched();
+    // Object.values(this.signUpForm.controls)
+    //   .forEach(control => {
+    //     control.markAsDirty();
+    //     control.updateValueAndValidity();
+    //   });
+
+    this.signUpForm.markAllAsTouchedAndDirty();
+    this.signUpForm.updateAllValuesAndValidity();
+
+    console.log(this.signUpForm);
+    if (!this.signUpForm.valid) {
       return;
     }
+
+    // Cause: pending state when updateValueAndValidity() called
+    console.log('How are we here?');
 
     const {passwordConfirmation, ...user} = this.signUpForm.value;
 

@@ -1,11 +1,25 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { debounceTime, first, map, Observable } from 'rxjs';
+import { CustomErrorNames } from '../errors/form-error.utils';
 import { UserService } from '../services/user.service';
 
 @Injectable()
 export class SignUpFormValidator {
   constructor(private userService: UserService) {}
+
+  // static displayName: ValidatorFn = (
+  //   displayNameControl: AbstractControl
+  // ): ValidationErrors | null => {
+  //   if (!displayNameControl.value) {
+  //     return null;
+  //   }
+  //
+  //   const regexp = /^$/;
+  //
+  //   return regexp.test(displayNameControl.value)
+  //     ? null : {};
+  // };
 
   static usernameStartsWithLetter: ValidatorFn = (
     usernameControl: AbstractControl
@@ -15,7 +29,7 @@ export class SignUpFormValidator {
     }
 
     return /^[a-zA-Z]$/.test(usernameControl.value?.substring(0, 1))
-      ? null : {'startsWithLetter': false};
+      ? null : {[CustomErrorNames.StartsWithLetter]: 'Username'};
   };
 
   usernameAvailable: AsyncValidatorFn = (
@@ -23,7 +37,7 @@ export class SignUpFormValidator {
   ): Observable<ValidationErrors | null> => {
     return this.userService.isUsernameAvailable(usernameControl.value).pipe(
       debounceTime(1000),
-      map(isFree => isFree ? null : {'notAvailable': 'Username'}),
+      map(isFree => isFree ? null : {[CustomErrorNames.NotAvailable]: 'Username'}),
       first()
     );
   };
@@ -33,7 +47,7 @@ export class SignUpFormValidator {
   ): Observable<ValidationErrors | null> => {
     return this.userService.isEmailAvailable(emailControl.value).pipe(
       debounceTime(1000),
-      map(isFree => isFree ? null : {'notAvailable': 'Email'}),
+      map(isFree => isFree ? null : {[CustomErrorNames.NotAvailable]: 'Email'}),
       first()
     );
   };
@@ -45,6 +59,6 @@ export class SignUpFormValidator {
     const password = group?.get('password')?.value;
     const passwordConfirmation = passwordConfirmationControl.value;
 
-    return password === passwordConfirmation ? null : {different: true};
+    return password === passwordConfirmation ? null : {[CustomErrorNames.Match]: 'Passwords'};
   };
 }

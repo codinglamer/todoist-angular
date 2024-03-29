@@ -8,7 +8,7 @@ import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 
 import { routes } from './app.routes';
-import { CustomErrorStateMatcher } from './errors/custom-error-state-matcher';
+import { TouchedAndDirtyErrorStateMatcher } from './errors/touched-and-dirty-error-state-matcher';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +17,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(provideFirebaseApp(() => initializeApp(environment.firebaseConfig))),
     importProvidersFrom(provideAuth(() => getAuth())),
     importProvidersFrom(provideFirestore(() => getFirestore())),
-    { provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher }
+    { provide: ErrorStateMatcher, useClass: TouchedAndDirtyErrorStateMatcher }
   ]
 };
